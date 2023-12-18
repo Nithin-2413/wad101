@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 function todoList() {
   const all = [];
 
@@ -7,21 +6,19 @@ function todoList() {
   };
 
   const markAsComplete = (index) => {
-    if (all[index]) {
-      all[index].completed = true;
-    }
+    all[index].completed = true;
   };
 
-  const isDueToday = (dueDate) => {
+  function isDueToday(dueDate) {
     const today = new Date().toISOString().split("T")[0];
     return dueDate === today;
-  };
+  }
 
-  const toString = (todo) => {
+  function toString(todo) {
     const dueDate = isDueToday(todo.dueDate) ? "" : todo.dueDate;
     const status = todo.completed ? "[x]" : "[ ]";
     return `${status} ${todo.title} ${dueDate}`;
-  };
+  }
 
   const overdue = () => {
     return all.filter((todo) => todo.dueDate < new Date().toISOString().split("T")[0]);
