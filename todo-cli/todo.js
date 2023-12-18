@@ -9,9 +9,12 @@ function todoList() {
     all[index].completed = true;
   };
 
-  const isDueToday = (dueDate) => {
-    const today = new Date().toISOString().split("T")[0];
-    return dueDate === today;
+  const dueToday = () => {
+    const today = new Date().toLocaleDateString("en-CA");
+    return all.filter(
+      (item) => item.dueDate === today
+    );
+    return all.filter((todo) => todo.dueDate === new Date().toISOString().split("T")[0]);
   };
 
   const overdue = () => {
