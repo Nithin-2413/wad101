@@ -1,38 +1,39 @@
 const todoList = () => {
-  const all = [];
+  const allTasks = [];
 
-  const add = (todoItem) => {
-    all.push(todoItem);
+  const addTask = (task) => {
+    allTasks.push(task);
   };
 
-  const markAsComplete = (index) => {
-    if (index >= 0 && index < all.length) {
-      all[index].completed = true;
+  const markAsComplete = (taskId) => {
+    const task = allTasks.find((item) => item.id === taskId);
+    if (task) {
+      task.completed = true;
     } else {
-      console.error("Invalid index");
+      console.error(`Task with ID ${taskId} not found.`);
     }
   };
 
   const overdue = () => {
     const currentDate = new Date();
-    return all.filter((item) => new Date(item.dueDate) < currentDate);
+    return allTasks.filter((item) => new Date(item.dueDate) < currentDate);
   };
 
   const dueToday = () => {
     const currentDate = new Date().toISOString().split('T')[0];
-    return all.filter((item) => new Date(item.dueDate).toISOString().split('T')[0] === currentDate);
+    return allTasks.filter((item) => new Date(item.dueDate).toISOString().split('T')[0] === currentDate);
   };
 
   const dueLater = () => {
     const currentDate = new Date().toISOString().split('T')[0];
-    return all.filter((item) => new Date(item.dueDate).toISOString().split('T')[0] > currentDate);
+    return allTasks.filter((item) => new Date(item.dueDate).toISOString().split('T')[0] > currentDate);
   };
 
   const toDisplayableList = () => {
     const currentDate = new Date().toISOString().split("T")[0];
     let output = "";
 
-    all.forEach((item) => {
+    allTasks.forEach((item) => {
       if (item.dueDate === currentDate) {
         output += `[${item.completed ? 'x' : ' '}] ${item.title}\n`;
       } else if (item.dueDate < currentDate) {
@@ -46,8 +47,8 @@ const todoList = () => {
   };
 
   return {
-    all,
-    add,
+    allTasks,
+    addTask,
     markAsComplete,
     overdue,
     dueToday,
