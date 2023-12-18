@@ -1,64 +1,52 @@
-// Import the todoList module
 const todoList = require("../todo");
 
-// Destructure the methods from the todoList module
-const { add, markAsComplete, overdue, dueToday, dueLater, all } = todoList();
+describe("TodoList Test Suite", () => {
+  let todo;
 
-// Test suite for the Todo List
-describe("Todo List Test Suite", () => {
-  // Before starting all tests
-  beforeAll(() => {
-    // Add a test task before each test
-    add({
-      title: "Test todo",
-      dueDate: new Date().toLocaleDateString("en-CA"),
-      completed: false,
-    });
+  beforeEach(() => {
+    todo = todoList();
   });
 
-  // Test for adding a new todo
-  test("Adding a new todo", () => {
-    const initialLength = all.length;
-    add({
-      title: "Another Test todo",
-      dueDate: new Date().toLocaleDateString("en-CA"),
-      completed: false,
-    });
-    expect(all.length).toBe(initialLength + 1);
+  test("Creating a new todo", () => {
+    const newTodo = { title: "Buy groceries", dueDate: '2023-12-15' };
+    todo.add(newTodo);
+    expect(todo.all.length).toBe(1);
+    expect(todo.all[0]).toEqual(newTodo);
   });
 
-  // Test for marking a todo as complete
-  test("Marking a todo as complete", () => {
-    markAsComplete(0);
-    expect(all[0].completed).toBe(true);
+  test("Marking a todo as completed", () => {
+    const newTodo = { title: 'Finish report', dueDate: '2023-12-14', completed: false };
+    todo.add(newTodo);
+    todo.markAsComplete(0);
+
+    expect(todo.all[0].completed).toBe(true);
   });
 
-  // Test for overdue todos
-  test("Overdue todos", () => {
-    add({
-      title: "Test overdue",
-      dueDate: new Date(
-        new Date().setDate(new Date().getDate() - 1)
-      ).toLocaleDateString("en-CA"),
-      completed: false,
-    });
-    expect(overdue().length).toBe(1);
+  test("Retrieval of overdue items", () => {
+    const overdueTodo = { title: 'Pay bills', dueDate: '2023-12-12', completed: false };
+    todo.add(overdueTodo);
+    const overdueItems = todo.overdue();
+    expect(overdueItems.length).toBe(1);
+    expect(overdueItems[0]).toEqual(overdueTodo);
   });
 
-  // Test for todos due today
-  test("Due today todos", () => {
-    expect(dueToday().length).toBe(2);
+  test("Retrieval of due today items", () => {
+    const dueTodayTodo = { title: 'Clean room', dueDate: '2023-12-19', completed: false };
+    todo.add(dueTodayTodo);
+
+    const dueTodayItems = todo.dueToday();
+
+    expect(dueTodayItems.length).toBe(1);
+    expect(dueTodayItems[0]).toEqual(dueTodayTodo);
   });
 
-  // Test for todos due later
-  test("Due later todos", () => {
-    add({
-      title: "Test due later",
-      dueDate: new Date(
-        new Date().setDate(new Date().getDate() + 1)
-      ).toLocaleDateString("en-CA"),
-      completed: false,
-    });
-    expect(dueLater().length).toBe(1);
+  test("Retrieval of due later items", () => {
+    const dueLaterTodo = { title: 'Call dentist', dueDate: '2023-12-20', completed: false };
+    todo.add(dueLaterTodo);
+
+    const dueLaterItems = todo.dueLater();
+
+    expect(dueLaterItems.length).toBe(1);
+    expect(dueLaterItems[0]).toEqual(dueLaterTodo);
   });
 });
