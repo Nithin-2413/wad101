@@ -9,31 +9,27 @@ function todoList() {
     all[index].completed = true;
   };
 
-  function isDueToday(dueDate) {
-    const today = new Date().toISOString().split("T")[0];
-    return dueDate === today;
-  }
-
-  function toString(todo) {
-    const dueDate = isDueToday(todo.dueDate) ? "" : todo.dueDate;
-    const status = todo.completed ? "[x]" : "[ ]";
-    return `${status} ${todo.title} ${dueDate}`;
-  }
-
   const overdue = () => {
-    return all.filter((todo) => todo.dueDate < new Date().toISOString().split("T")[0]);
+    const today = new Date().toISOString().split("T")[0];
+    return all.filter((todo) => todo.dueDate < today);
   };
 
   const dueToday = () => {
-    return all.filter((todo) => todo.dueDate === new Date().toISOString().split("T")[0]);
+    const today = new Date().toISOString().split("T")[0];
+    return all.filter((todo) => todo.dueDate === today);
   };
 
   const dueLater = () => {
-    return all.filter((todo) => todo.dueDate > new Date().toISOString().split("T")[0]);
+    const today = new Date().toISOString().split("T")[0];
+    return all.filter((todo) => todo.dueDate > today);
   };
 
   const toDisplayableList = () => {
-    return all.map((todo) => toString(todo)).join("\n");
+    return all.map((todo) => {
+      const dueDate = todo.dueDate === new Date().toISOString().split("T")[0] ? "" : todo.dueDate;
+      const status = todo.completed ? "[x]" : "[ ]";
+      return `${status} ${todo.title} ${dueDate}`;
+    }).join("\n");
   };
 
   return {
