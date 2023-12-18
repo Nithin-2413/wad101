@@ -1,41 +1,48 @@
 const todoList = () => {
-  let all = [];
+  const all = [];
 
   const add = (todoItem) => {
     all.push(todoItem);
   };
 
   const markAsComplete = (index) => {
-    // Marks a task as completed at a specific index in the list.
-    all[index].completed = true;
+    if (index >= 0 && index < all.length) {
+      all[index].completed = true;
+    } else {
+      console.error("Invalid index");
+    }
   };
 
   const overdue = () => {
-    // Filters and returns tasks that are overdue based on their due date.
-    const today = new Date().toISOString().split("T")[0];
-    return all.filter((item) => item.dueDate < today && !item.completed);
+    const currentDate = new Date();
+    return all.filter((item) => new Date(item.dueDate) < currentDate);
   };
 
   const dueToday = () => {
-    // Filters and returns tasks that are due today.
-    const today = new Date().toISOString().split("T")[0];
-    return all.filter((item) => item.dueDate === today && !item.completed);
+    const currentDate = new Date().toISOString().split('T')[0];
+    return all.filter((item) => new Date(item.dueDate).toISOString().split('T')[0] === currentDate);
   };
 
   const dueLater = () => {
-    // Filters and returns tasks that are due later.
-    const today = new Date().toISOString().split("T")[0];
-    return all.filter((item) => item.dueDate > today && !item.completed);
+    const currentDate = new Date().toISOString().split('T')[0];
+    return all.filter((item) => new Date(item.dueDate).toISOString().split('T')[0] > currentDate);
   };
 
-  const toDisplayableList = (list) => {
-    // Formats the list of tasks for display, including completion status and due date.
-    const formattedList = list.map((item) => {
-      const status = item.completed ? "[x]" : "[ ]";
-      return `${status} ${item.title} ${item.dueDate !== today ? item.dueDate : ''}`;
-    }).join("\n");
+  const toDisplayableList = () => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    let output = "";
 
-    return formattedList;
+    all.forEach((item) => {
+      if (item.dueDate === currentDate) {
+        output += `[${item.completed ? 'x' : ' '}] ${item.title}\n`;
+      } else if (item.dueDate < currentDate) {
+        output += `[ ] ${item.title} ${item.dueDate}\n`;
+      } else {
+        output += `[ ] ${item.title} ${item.dueDate}\n`;
+      }
+    });
+
+    return output.trim();
   };
 
   return {
