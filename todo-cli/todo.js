@@ -1,59 +1,60 @@
+const getCurrentDate = () => {
+  return new Date().toISOString().split("T")[0];
+};
+
 const todoList = () => {
-  const allTasks = [];
+  const tasks = [];
 
   const addTask = (task) => {
-    allTasks.push(task);
+    tasks.push(task);
   };
 
-  const markAsComplete = (taskId) => {
-    const task = allTasks.find((item) => item.id === taskId);
-    if (task) {
-      task.completed = true;
-    } else {
-      console.error(`Task with ID ${taskId} not found.`);
+  const markAsComplete = (index) => {
+    if (index >= 0 && index < tasks.length) {
+      tasks[index].completed = true;
     }
   };
 
-  const overdue = () => {
-    const currentDate = new Date();
-    return allTasks.filter((item) => new Date(item.dueDate) < currentDate);
+  const overdueTasks = () => {
+    const currentDate = getCurrentDate();
+    return tasks.filter((item) => new Date(item.dueDate) < new Date(currentDate));
   };
 
-  const dueToday = () => {
-    const currentDate = new Date().toISOString().split('T')[0];
-    return allTasks.filter((item) => new Date(item.dueDate).toISOString().split('T')[0] === currentDate);
+  const tasksDueToday = () => {
+    const currentDate = getCurrentDate();
+    return tasks.filter((item) => new Date(item.dueDate).toISOString().split("T")[0] === currentDate);
   };
 
-  const dueLater = () => {
-    const currentDate = new Date().toISOString().split('T')[0];
-    return allTasks.filter((item) => new Date(item.dueDate).toISOString().split('T')[0] > currentDate);
+  const tasksDueLater = () => {
+    const currentDate = getCurrentDate();
+    return tasks.filter((item) => new Date(item.dueDate) > new Date(currentDate));
   };
 
-  const toDisplayableList = () => {
-    const currentDate = new Date().toISOString().split("T")[0];
+  const formatDisplayableList = (list) => {
     let output = "";
+    if (list.length === 0) {
+      return "";
+    }
 
-    allTasks.forEach((item) => {
-      if (item.dueDate === currentDate) {
-        output += `[${item.completed ? 'x' : ' '}] ${item.title}\n`;
-      } else if (item.dueDate < currentDate) {
-        output += `[ ] ${item.title} ${item.dueDate}\n`;
-      } else {
-        output += `[ ] ${item.title} ${item.dueDate}\n`;
+    for (const item of list) {
+      output += `[${item.completed ? "x" : " "}] ${item.title}`;
+      if (item.dueDate !== getCurrentDate()) {
+        output += ` ${formattedDate(new Date(item.dueDate))}`;
       }
-    });
+      output += "\n";
+    }
 
     return output.trim();
   };
 
   return {
-    allTasks,
+    tasks,
     addTask,
     markAsComplete,
-    overdue,
-    dueToday,
-    dueLater,
-    toDisplayableList,
+    overdueTasks,
+    tasksDueToday,
+    tasksDueLater,
+    formatDisplayableList,
   };
 };
 
