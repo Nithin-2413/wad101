@@ -1,10 +1,8 @@
-/* eslint-disable no-undef */
 const todoList = require('../todo');
-const { all, markAsComplete, add, dueLater, dueToday, overdue } = todoList();
+const { all, markAsComplete, add, dueLater, dueToday, overdue, toDisplayableList } = todoList();
 
 describe("Todo List Test Suite", () => {
   beforeAll(() => {
-   
     add({
       title: "Test Todo",
       completed: false,
@@ -29,7 +27,6 @@ describe("Todo List Test Suite", () => {
   });
 
   test('retrieving overdue items', () => {
-    // Add overdue items for testing
     add({
       title: "Overdue Todo",
       completed: false,
@@ -54,5 +51,11 @@ describe("Todo List Test Suite", () => {
       dueDate: '2023-12-31', // Future date for testing
     });
     expect(dueLater().length).toBe(1);
+  });
+
+  test('toDisplayableList function', () => {
+    const displayableList = toDisplayableList();
+    expect(typeof displayableList).toBe('string');
+    // You can add more specific expectations for the displayable list format if needed
   });
 });
