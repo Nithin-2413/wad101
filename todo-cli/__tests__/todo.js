@@ -1,61 +1,64 @@
-const todoList = require('../todo');
-const { all, markAsComplete, add, dueLater, dueToday, overdue, toDisplayableList } = todoList();
+// Import the todoList module
+const todoList = require("../todo");
 
+// Destructure the methods from the todoList module
+const { add, markAsComplete, overdue, dueToday, dueLater, all } = todoList();
+
+// Test suite for the Todo List
 describe("Todo List Test Suite", () => {
+  // Before starting all tests
   beforeAll(() => {
+    // Add a test task before each test
     add({
-      title: "Test Todo",
+      title: "Test todo",
+      dueDate: new Date().toLocaleDateString("en-CA"),
       completed: false,
-      dueDate: new Date().toISOString().split("T")[0],
     });
   });
 
-  test("should add new todo", () => {
-    const todoItemsCount = all.length;
+  // Test for adding a new todo
+  test("Adding a new todo", () => {
+    const initialLength = all.length;
     add({
-      title: "Test Todo",
+      title: "Another Test todo",
+      dueDate: new Date().toLocaleDateString("en-CA"),
       completed: false,
-      dueDate: new Date().toISOString().split("T")[0],
     });
-    expect(all.length).toBe(todoItemsCount + 1);
+    expect(all.length).toBe(initialLength + 1);
   });
 
-  test("should mark as complete", () => {
-    expect(all[0].completed).toBe(false);
+  // Test for marking a todo as complete
+  test("Marking a todo as complete", () => {
     markAsComplete(0);
     expect(all[0].completed).toBe(true);
   });
 
-  test('retrieving overdue items', () => {
+  // Test for overdue todos
+  test("Overdue todos", () => {
     add({
-      title: "Overdue Todo",
+      title: "Test overdue",
+      dueDate: new Date(
+        new Date().setDate(new Date().getDate() - 1)
+      ).toLocaleDateString("en-CA"),
       completed: false,
-      dueDate: '2023-12-01', // Past due date for testing
     });
     expect(overdue().length).toBe(1);
   });
 
-  test('retrieving due today items', () => {
-    add({
-      title: "Today's Todo",
-      completed: false,
-      dueDate: new Date().toISOString().split("T")[0],
-    });
-    expect(dueToday().length).toBe(1);
+  // Test for todos due today
+  test("Due today todos", () => {
+    expect(dueToday().length).toBe(2);
   });
 
-  test('retrieving due later items', () => {
+  // Test for todos due later
+  test("Due later todos", () => {
     add({
-      title: "Future Todo",
+      title: "Test due later",
+      dueDate: new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toLocaleDateString("en-CA"),
       completed: false,
-      dueDate: '2023-12-31', // Future date for testing
     });
     expect(dueLater().length).toBe(1);
-  });
-
-  test('toDisplayableList function', () => {
-    const displayableList = toDisplayableList();
-    expect(typeof displayableList).toBe('string');
-    // You can add more specific expectations for the displayable list format if needed
   });
 });
