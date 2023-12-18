@@ -1,41 +1,42 @@
+// models/todo.js
 'use strict';
 const { Model } = require('sequelize');
 const { Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class MyTodo extends Model {
-    static async addTask(params) {
-      return await MyTodo.create(params);
+  class Todo extends Model {
+    static async createTask(params) {
+      return await Todo.create(params);
     }
 
-    static async showTodoList() {
-      console.log("Todo List: \n");
+    static async displayList() {
+      console.log("My Todo list \n");
 
       console.log("Overdue");
-      const pendingTasks = await MyTodo.overdueTasks();
-      pendingTasks.forEach((task) => {
-        console.log(task.displayString());
+      const overdueTasks = await Todo.overdue();
+      overdueTasks.forEach((task) => {
+        console.log(task.displayableString());
       });
 
       console.log("\n");
 
       console.log("Due Today");
-      const todayTasks = await MyTodo.tasksDueToday();
+      const todayTasks = await Todo.dueToday();
       todayTasks.forEach((task) => {
-        console.log(task.displayString());
+        console.log(task.displayableString());
       });
 
       console.log("\n");
 
       console.log("Due Later");
-      const futureTasks = await MyTodo.tasksDueLater();
+      const futureTasks = await Todo.dueLater();
       futureTasks.forEach((task) => {
-        console.log(task.displayString());
+        console.log(task.displayableString());
       });
     }
 
-    static async overdueTasks() {
-      return await MyTodo.findAll({
+    static async overdue() {
+      return await Todo.findAll({
         where: {
           dueDate: {
             [Op.lt]: new Date().toISOString().split("T")[0],
@@ -44,8 +45,8 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async tasksDueToday() {
-      return await MyTodo.findAll({
+    static async dueToday() {
+      return await Todo.findAll({
         where: {
           dueDate: {
             [Op.eq]: new Date().toISOString().split("T")[0],
@@ -54,8 +55,8 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static async tasksDueLater() {
-      return await MyTodo.findAll({
+    static async dueLater() {
+      return await Todo.findAll({
         where: {
           dueDate: {
             [Op.gt]: new Date().toISOString().split("T")[0],
@@ -65,12 +66,12 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async markAsComplete(id) {
-      const todo = await MyTodo.findByPk(id);
+      const todo = await Todo.findByPk(id);
       todo.completed = true;
       await todo.save();
     }
 
-    displayString() {
+    displayableString() {
       let checkbox = this.completed ? "[x]" : "[ ]";
       let displayDate =
         this.dueDate === new Date().toLocaleDateString("en-CA")
@@ -80,14 +81,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  MyTodo.init({
-    title: DataTypes.STRING,
-    dueDate: DataTypes.DATEONLY,
-    completed: DataTypes.BOOLEAN,
-  }, {
-    sequelize,
-    modelName: 'MyTodo',
-  });
+  Todo.init(
+    {
+      title: DataTypes.STRING,
+      dueDate: DataTypes.DATEONLY,
+      completed: DataTypes.BOOLEAN,
+    },
+    {
+      sequelize,
+      modelName: 'Todo',
+    }
+  );
 
-  return MyTodo;
+  return Todo;
 };
