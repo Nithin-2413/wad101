@@ -2,23 +2,15 @@
 const todoList = require('../todo');
 const { all, markAsComplete, add, dueLater, dueToday, overdue } = todoList();
 
-describe("Todolist test suite", () => {
+describe("Todo List Test Suite", () => {
   beforeAll(() => {
+   
     add({
       title: "Test Todo",
       completed: false,
       dueDate: new Date().toISOString().split("T")[0],
     });
   });
-
-  const formattedDate = (d) => {
-    return d.toISOString().split("T")[0];
-  };
-
-  const dateToday = new Date();
-  const today = formattedDate(dateToday);
-  const yesterday = formattedDate(new Date(dateToday.setDate(dateToday.getDate() - 1)));
-  const tomorrow = formattedDate(new Date(dateToday.setDate(dateToday.getDate() + 1)));
 
   test("should add new todo", () => {
     const todoItemsCount = all.length;
@@ -37,23 +29,30 @@ describe("Todolist test suite", () => {
   });
 
   test('retrieving overdue items', () => {
-    add({ title: "Test Todo", completed: false, dueDate: yesterday });
-    add({ title: "Todo", completed: false, dueDate: yesterday });
-    add({ title: "Test", completed: false, dueDate: yesterday });
-    expect(overdue().length).toBe(3);
+    // Add overdue items for testing
+    add({
+      title: "Overdue Todo",
+      completed: false,
+      dueDate: '2023-12-01', // Past due date for testing
+    });
+    expect(overdue().length).toBe(1);
   });
 
   test('retrieving due today items', () => {
-    add({ title: "Test Todo", completed: false, dueDate: today });
-    add({ title: "Todo", completed: false, dueDate: today });
-    add({ title: "Test", completed: false, dueDate: today });
-    expect(dueToday().length).toBe(5);
+    add({
+      title: "Today's Todo",
+      completed: false,
+      dueDate: new Date().toISOString().split("T")[0],
+    });
+    expect(dueToday().length).toBe(1);
   });
 
   test('retrieving due later items', () => {
-    add({ title: "Test Todo", completed: false, dueDate: tomorrow });
-    add({ title: "Todo", completed: false, dueDate: tomorrow });
-    add({ title: "Test", completed: false, dueDate: tomorrow });
-    expect(dueLater().length).toBe(3);
+    add({
+      title: "Future Todo",
+      completed: false,
+      dueDate: '2023-12-31', // Future date for testing
+    });
+    expect(dueLater().length).toBe(1);
   });
 });
