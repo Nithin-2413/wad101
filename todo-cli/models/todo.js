@@ -3,67 +3,44 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
-    static associate(models) {
-     
-    }
-
-    static async addTask(params) {
-      try {
-        return await Todo.create(params);
-      } catch (error) {
-        throw new Error('Unable to add a new task');
-      }
-    }
-
-    static async showList() {
-      try {
-        
-      } catch (error) {
-        throw new Error('Unable to fetch and display todos');
-      }
-    }
-
     static async overdue() {
       try {
-        
+        // Fetch all tasks (including completed ones) that are past their due date
+        // Implement logic here
       } catch (error) {
-        throw new Error('Unable to fetch overdue todos');
+        throw new Error('Unable to fetch overdue tasks');
       }
     }
 
     static async dueToday() {
       try {
-        
+        // Fetch all tasks that are due today (including completed ones)
+        // Implement logic here
       } catch (error) {
-        throw new Error('Unable to fetch todos due today');
+        throw new Error('Unable to fetch tasks due today');
       }
     }
 
     static async dueLater() {
       try {
-        
+        // Fetch all tasks due on a future date (including completed ones)
+        // Implement logic here
       } catch (error) {
-        throw new Error('Unable to fetch todos due later');
+        throw new Error('Unable to fetch tasks due later');
       }
     }
 
     static async markAsComplete(id) {
       try {
-        const todo = await Todo.findByPk(id);
-        if (todo) {
-          todo.completed = true;
-          await todo.save();
-          return todo;
-        }
-        throw new Error('Todo not found');
+        // Change the completed property of a todo to true
+        // Implement logic here
       } catch (error) {
         throw new Error('Unable to mark todo as complete');
       }
     }
 
     displayableString() {
-      let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
+      // Implement displayableString method to return formatted strings for different scenarios
     }
   }
 
