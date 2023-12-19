@@ -1,67 +1,84 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
-const createTodoList = require("../todo");
+const generateTaskManager = require("../todo");
 
-describe("Todo List Test Suite", () => {
-  let todoInstance;
+describe("Task Manager Test Suite", () => {
+  let taskManager;
 
-  beforeAll(() => {
-    todoInstance = createTodoList();
-    todoInstance.addTask({
-      title: "New Task",
-      completed: false,
-      dueDate: new Date().toLocaleDateString("en-CA"),
+  beforeEach(() => {
+    taskManager = generateTaskManager();
+
+    taskManager.addTask({
+      title: "Project Work",
+      isDone: false,
+      deadline: new Date().toLocaleDateString("en-US"),
     });
-    todoInstance.addTask({
-      title: "Test Task",
-      completed: false,
-      dueDate: new Date().toLocaleDateString("en-CA", { addDays: 1 }),
+
+    taskManager.addTask({
+      title: "Study for Exam",
+      isDone: false,
+      deadline: new Date().toLocaleDateString("en-US", { addDays: 1 }),
     });
   });
 
-  test("Should add a new task", () => {
-    const taskCount = todoInstance.tasks.length;
-    todoInstance.addTask({
-      title: "Test Task",
-      completed: false,
-      dueDate: new Date().toLocaleDateString("en-CA"),
+  test("Adding a new task increments task count", () => {
+    const initialCount = taskManager.tasks.length;
+    taskManager.addTask({
+      title: "Prepare Presentation",
+      isDone: false,
+      deadline: new Date().toLocaleDateString("en-US"),
     });
-    expect(todoInstance.tasks.length).toBe(taskCount + 1);
+    expect(taskManager.tasks.length).toBe(initialCount + 1);
   });
 
-  test("Should mark a task as complete", () => {
-    expect(todoInstance.tasks[0].completed).toBe(false);
-    todoInstance.markAsComplete(0);
-    expect(todoInstance.tasks[0].completed).toBe(true);
+  test("Marking a task as complete updates status", () => {
+    expect(taskManager.tasks[0].isDone).toBe(false);
+    taskManager.markAsComplete(0);
+    expect(taskManager.tasks[0].isDone).toBe(true);
   });
 
-  test("Should add an overdue task", () => {
+  test("Adding an overdue task identifies it correctly", () => {
     const overdueTask = {
-      title: "Pay bills",
-      dueDate: "2023-12-12",
-      completed: false,
+      title: "Report Submission",
+      deadline: "2023-12-12",
+      isDone: false,
     };
-    todoInstance.addTask(overdueTask);
-    const overdueItems = todoInstance.getOverdueTasks();
-    expect(overdueItems.length).toBe(1);
-    expect(overdueItems[0]).toEqual(overdueTask);
+    taskManager.addTask(overdueTask);
+    const overdueTasks = taskManager.overdueTasks();
+    expect(overdueTasks.length).toBe(1);
+    expect(overdueTasks[0]).toEqual(overdueTask);
   });
 
-  test("Should retrieve tasks due today", () => {
-    const dueTodayTasks = todoInstance.getTasksDueToday();
-    expect(dueTodayTasks.length).toBeGreaterThan(0);
+  test("Retrieving tasks due today works as expected", () => {
+    const todayTasks = taskManager.tasksDueToday();
+    expect(todayTasks.length).toBeGreaterThan(0);
     // Add more specific assertions based on your implementation
   });
 
-  test("Should retrieve tasks due later", () => {
-    const dueLaterTask = {
-      title: "Call dentist",
-      dueDate: "2024-12-29",
-      completed: false,
+  test("Retrieving tasks due later functions correctly", () => {
+    const laterTask = {
+      title: "Dentist Appointment",
+      deadline: "2024-12-29",
+      isDone: false,
     };
-    todoInstance.addTask(dueLaterTask);
-    const dueLaterTasks = todoInstance.getTasksDueLater();
-    expect(dueLaterTasks.length).toBe(1);
-    expect(dueLaterTasks[0]).toEqual(dueLaterTask);
+    taskManager.addTask(laterTask);
+    const laterTasks = taskManager.tasksDueLater();
+    expect(laterTasks.length).toBe(1);
+    expect(laterTasks[0]).toEqual(laterTask);
+  });
+
+  test("Completing a task removes it from tasks due today", () => {
+    const dueTodayTasksBefore = taskManager.tasksDueToday().length;
+    taskManager.markAsComplete(0);
+    const dueTodayTasksAfter = taskManager.tasksDueToday().length;
+    expect(dueTodayTasksAfter).toBeLessThan(dueTodayTasksBefore);
+  });
+
+  test("Adding multiple tasks updates the total count", () => {
+    const initialCount = taskManager.tasks.length;
+    const tasksToAdd = [
+      { title: "Task A", isDone: false, deadline: "2023-12-12" },
+      { title: "Task B", isDone: false, deadline: "2023-12-13" },
+    ];
+    tasksToAdd.forEach((task) => taskManager.addTask(task));
+    expect(taskManager.tasks.length).toBe(initialCount + tasksToAdd.length);
   });
 });
