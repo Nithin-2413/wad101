@@ -1,37 +1,37 @@
-const createTaskManager = () => {
-  const today = new Date().toISOString().split("T")[0];
+const createTodoList = () => {
+  const currentDate = new Date().toISOString().split("T")[0];
   const tasks = [];
 
-  const addTask = (newTask) => {
-    tasks.push(newTask);
+  const addTask = (taskItem) => {
+    tasks.push(taskItem);
   };
 
   const markAsComplete = (index) => {
-    tasks[index].isDone = true;
+    tasks[index].completed = true;
   };
 
-  const overdueTasks = () => {
-    return tasks.filter((task) => new Date(task.deadline) < new Date(today));
+  const getOverdueTasks = () => {
+    return tasks.filter((item) => new Date(item.dueDate) < new Date(currentDate));
   };
 
-  const tasksDueToday = () => {
-    return tasks.filter((task) => new Date(task.deadline).toISOString().split("T")[0] === today);
+  const getTasksDueToday = () => {
+    return tasks.filter((item) => new Date(item.dueDate).toISOString().split("T")[0] === currentDate);
   };
 
-  const tasksDueLater = () => {
-    return tasks.filter((task) => new Date(task.deadline) > new Date(today));
+  const getTasksDueLater = () => {
+    return tasks.filter((item) => new Date(item.dueDate) > new Date(currentDate));
   };
 
-  const displayTasks = (list) => {
+  const displayableList = (list) => {
     let output = "";
     if (list.length === 0) {
       return "";
     }
 
-    for (const task of list) {
-      output += `[${task.isDone ? "x" : " "}] ${task.title}`;
-      if (task.deadline !== today) {
-        output += ` ${formatDate(new Date(task.deadline))}`;
+    for (const item of list) {
+      output += `[${item.completed ? "x" : " "}] ${item.title}`;
+      if (item.dueDate !== currentDate) {
+        output += ` ${formattedDate(new Date(item.dueDate))}`;
       }
       output += "\n";
     }
@@ -39,7 +39,12 @@ const createTaskManager = () => {
     return output.trim();
   };
 
-  const formatDate = (date) => {
+  const toDisplayableList = () => {
+    const list = tasks.filter((item) => !item.completed);
+    return displayableList(list);
+  };
+
+  const formattedDate = (date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   };
 
@@ -47,11 +52,11 @@ const createTaskManager = () => {
     tasks,
     addTask,
     markAsComplete,
-    overdueTasks,
-    tasksDueToday,
-    tasksDueLater,
-    displayTasks,
+    getOverdueTasks,
+    getTasksDueToday,
+    getTasksDueLater,
+    toDisplayableList,
   };
 };
 
-module.exports = createTaskManager;
+module.exports = createTodoList;
