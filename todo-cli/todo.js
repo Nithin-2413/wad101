@@ -1,4 +1,4 @@
-const TaskManager = () => {
+const createTaskManager = () => {
   const today = new Date().toISOString().split("T")[0];
   const tasks = [];
 
@@ -8,10 +8,9 @@ const TaskManager = () => {
 
   const markAsComplete = (index) => {
     tasks[index].isDone = true;
-  };  
+  };
 
-
-    const overdueTasks = () => {
+  const overdueTasks = () => {
     return tasks.filter((task) => new Date(task.deadline) < new Date(today));
   };
 
@@ -40,23 +39,6 @@ const TaskManager = () => {
     return output.trim();
   };
 
-  const toDisplayableList = (list) => {
-    let output = "";
-    if (list.length === 0) {
-      return "";
-    }
-
-    for (const task of list) {
-      output += `[${task.isDone ? "x" : " "}] ${task.title}`;
-      if (task.deadline !== today) {
-        output += ` ${formatDate(new Date(task.deadline))}`;
-      }
-      output += "\n";
-    }
-
-    return output.trim();
-  };
-
   const formatDate = (date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   };
@@ -69,8 +51,7 @@ const TaskManager = () => {
     tasksDueToday,
     tasksDueLater,
     displayTasks,
-    toDisplayableList,
   };
 };
 
-module.exports = TaskManager;
+module.exports = createTaskManager;
