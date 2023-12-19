@@ -10,14 +10,10 @@ const TaskManager = () => {
     tasks[index].isDone = true;
     
     const today = new Date().toISOString().split("T")[0];
-    const taskDueTodayIndex = tasks.findIndex(task => new Date(task.deadline).toISOString().split("T")[0] === today);
-    if (taskDueTodayIndex !== -1) {
-      tasks.splice(taskDueTodayIndex, 1); 
-    }
-  };
+    tasks = tasks.filter(task => new Date(task.deadline).toISOString().split("T")[0] !== today);
 
 
-  const overdueTasks = () => {
+    const overdueTasks = () => {
     return tasks.filter((task) => new Date(task.deadline) < new Date(today));
   };
 
