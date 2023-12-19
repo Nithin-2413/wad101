@@ -11,6 +11,7 @@ const TaskManager = () => {
     
     const today = new Date().toISOString().split("T")[0];
     tasks = tasks.filter(task => new Date(task.deadline).toISOString().split("T")[0] !== today);
+  };  
 
 
     const overdueTasks = () => {
