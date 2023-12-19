@@ -8,9 +8,6 @@ const TaskManager = () => {
 
   const markAsComplete = (index) => {
     tasks[index].isDone = true;
-    
-    const today = new Date().toISOString().split("T")[0];
-    tasks = tasks.filter(task => new Date(task.deadline).toISOString().split("T")[0] !== today);
   };  
 
 
