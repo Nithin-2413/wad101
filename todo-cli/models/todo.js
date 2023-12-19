@@ -5,8 +5,12 @@ module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     static async overdue() {
       try {
-        // Fetch all tasks (including completed ones) that are past their due date
-        // Implement logic here
+        const overdueTasks = await Todo.findAll({
+          where: {
+            dueDate: { [sequelize.Op.lt]: new Date() },
+          },
+        });
+        return overdueTasks;
       } catch (error) {
         throw new Error('Unable to fetch overdue tasks');
       }
@@ -14,8 +18,14 @@ module.exports = (sequelize, DataTypes) => {
 
     static async dueToday() {
       try {
-        // Fetch all tasks that are due today (including completed ones)
-        // Implement logic here
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dueTodayTasks = await Todo.findAll({
+          where: {
+            dueDate: today,
+          },
+        });
+        return dueTodayTasks;
       } catch (error) {
         throw new Error('Unable to fetch tasks due today');
       }
@@ -23,8 +33,12 @@ module.exports = (sequelize, DataTypes) => {
 
     static async dueLater() {
       try {
-        // Fetch all tasks due on a future date (including completed ones)
-        // Implement logic here
+        const dueLaterTasks = await Todo.findAll({
+          where: {
+            dueDate: { [sequelize.Op.gt]: new Date() },
+          },
+        });
+        return dueLaterTasks;
       } catch (error) {
         throw new Error('Unable to fetch tasks due later');
       }
@@ -32,8 +46,13 @@ module.exports = (sequelize, DataTypes) => {
 
     static async markAsComplete(id) {
       try {
-        // Change the completed property of a todo to true
-        // Implement logic here
+        const todo = await Todo.findByPk(id);
+        if (todo) {
+          todo.completed = true;
+          await todo.save();
+          return todo;
+        }
+        throw new Error('Todo not found');
       } catch (error) {
         throw new Error('Unable to mark todo as complete');
       }
