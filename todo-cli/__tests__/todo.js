@@ -66,11 +66,16 @@ describe("Task Manager Test Suite", () => {
   });
 
   test("Completing a task removes it from tasks due today", () => {
-    const dueTodayTasksBefore = taskManager.tasksDueToday().length;
-    taskManager.markAsComplete(0);
-    const dueTodayTasksAfter = taskManager.tasksDueToday().length;
-    expect(dueTodayTasksAfter).toBeLessThan(dueTodayTasksBefore);
+   const dueTodayTasksBefore = taskManager.tasksDueToday().length;
+   const taskId = 0; 
+   taskManager.markAsComplete(taskId);
+   const dueTodayTasksAfter = taskManager.tasksDueToday().length;
+   const completedTask = taskManager.tasks[taskId];
+
+   expect(dueTodayTasksAfter).toBeLessThan(dueTodayTasksBefore);
+   expect(completedTask.isDone).toBe(true); //
   });
+
 
   test("Adding multiple tasks updates the total count", () => {
     const initialCount = taskManager.tasks.length;
