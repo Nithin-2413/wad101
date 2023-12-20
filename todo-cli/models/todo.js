@@ -74,7 +74,7 @@ class Todo extends Model {
     dateStr = ` ${this.dueDate.toLocaleDateString("en-CA")}`;
   } else if (!this.completed && new Date(this.dueDate) > new Date()) {
     dateStr = ` ${this.dueDate.toLocaleDateString("en-CA")}`;
-  } else if (!this.completed && new Date(this.dueDate).toDateString() === new Date().toDateString()) {
+  } else if (!this.completed && this.dueDate.toDateString() === new Date().toDateString()) {
     dateStr = '';
   }
 
