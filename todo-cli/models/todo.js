@@ -9,16 +9,16 @@ module.exports = (sequelize) => {
 
     static async showList() {
       console.log("My Todo list \n Overdue");
-      const overdueTodos = await Todo.overdue();
-      console.log(overdueTodos.map((todo) => todo.displayableString()).join("\n"));
+      const overdueTasks = await Todo.overdue();
+      console.log(overdueTasks.map((task) => task.displayableString()).join("\n"));
       
       console.log("\n Due Today");
-      const todayTodos = await Todo.dueToday();
-      console.log(todayTodos.map((todo) => todo.displayableString()).join("\n"));
+      const todayTasks = await Todo.dueToday();
+      console.log(todayTasks.map((task) => task.displayableString()).join("\n"));
       
       console.log("\n Due Later");
-      const laterTodos = await Todo.dueLater();
-      console.log(laterTodos.map((todo) => todo.displayableString()).join("\n"));
+      const laterTasks = await Todo.dueLater();
+      console.log(laterTasks.map((task) => task.displayableString()).join("\n"));
     }
 
     static async overdue() {
