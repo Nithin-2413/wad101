@@ -1,25 +1,25 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "todo_db_dev",
-    "host": "127.0.0.1",
+    "username": "unique_dev_user",
+    "password": "dev_secure_password",
+    "database": "unique_todo_db_dev",
+    "host": "localhost",
     "dialect": "postgres",
     "logging": false
   },
   "test": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "todo_db_test",
-    "host": "127.0.0.1",
+    "username": "unique_test_user",
+    "password": "test_secure_password",
+    "database": "unique_todo_db_test",
+    "host": "localhost",
     "dialect": "postgres",
     "logging": false
   },
   "production": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "todo_db_prod",
-    "host": "127.0.0.1",
+    "username": "unique_prod_user",
+    "password": "prod_secure_password",
+    "database": "unique_todo_db_prod",
+    "host": "localhost",
     "dialect": "postgres"
   }
 }
