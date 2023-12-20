@@ -1,6 +1,6 @@
 "use strict";
 
-const { Model, Op } = require("sequelize");
+const { Model, DataTypes, Op } = require("sequelize");
 
 class Todo extends Model {
   static async addTask(params) {
@@ -67,25 +67,25 @@ class Todo extends Model {
   }
 
   displayableString() {
-  let checkbox = this.completed ? "[x]" : "[ ]";
-  let dateStr = '';
+    let checkbox = this.completed ? "[x]" : "[ ]";
+    let dateStr = '';
 
-  if (!this.completed) {
-    const today = new Date().toLocaleDateString("en-CA");
-    const dueDateStr = this.dueDate.toLocaleDateString("en-CA");
+    if (!this.completed) {
+      const today = new Date().toLocaleDateString("en-CA");
+      const dueDateStr = this.dueDate.toLocaleDateString("en-CA");
 
-    if (dueDateStr === today) {
-      dateStr = '';
-    } else {
-      dateStr = ` ${dueDateStr}`;
+      if (dueDateStr === today) {
+        dateStr = '';
+      } else {
+        dateStr = ` ${dueDateStr}`;
+      }
     }
-  }
 
-  return `${this.id}. ${checkbox} ${this.title}${dateStr}`.trim();
+    return `${this.id}. ${checkbox} ${this.title}${dateStr}`.trim();
+  }
 }
 
-
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   Todo.init(
     {
       title: DataTypes.STRING,
