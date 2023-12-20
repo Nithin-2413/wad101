@@ -1,5 +1,3 @@
-"use strict";
-
 const { Model, DataTypes, Op } = require("sequelize");
 
 class Todo extends Model {
@@ -67,20 +65,20 @@ class Todo extends Model {
   }
 
   displayableString() {
-  let checkbox = this.completed ? "[x]" : "[ ]";
-  let dateStr = '';
+    let checkbox = this.completed ? "[x]" : "[ ]";
+    let dateStr = "";
 
-  if (this.completed && new Date(this.dueDate) < new Date()) {
-    dateStr = ` ${this.dueDate.toLocaleDateString("en-CA")}`;
-  } else if (!this.completed && new Date(this.dueDate) > new Date()) {
-    dateStr = ` ${this.dueDate.toLocaleDateString("en-CA")}`;
-  } else if (!this.completed && this.dueDate.toDateString() === new Date().toDateString()) {
-    dateStr = '';
+    if (this.completed && new Date(this.dueDate) < new Date()) {
+      dateStr = ` ${this.dueDate.toLocaleDateString("en-CA")}`;
+    } else if (!this.completed && new Date(this.dueDate) > new Date()) {
+      dateStr = ` ${this.dueDate.toLocaleDateString("en-CA")}`;
+    } else if (!this.completed && this.dueDate.toDateString() === new Date().toDateString()) {
+      dateStr = "";
+    }
+
+    return `${this.id}. ${checkbox} ${this.title}${dateStr}`.trim();
   }
-
-  return `${this.id}. ${checkbox} ${this.title}${dateStr}`.trim();
 }
-
 
 module.exports = (sequelize) => {
   Todo.init(
