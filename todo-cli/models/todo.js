@@ -67,12 +67,23 @@ class Todo extends Model {
   }
 
   displayableString() {
-    let checkbox = this.completed ? "[x]" : "[ ]";
-    let dueDateStr = this.dueDate.toLocaleDateString("en-CA");
-    let dateStr = this.completed ? "" : dueDateStr;
-    return `${this.id}. ${checkbox} ${this.title} ${dateStr}`.trim();
+  let checkbox = this.completed ? "[x]" : "[ ]";
+  let dateStr = '';
+
+  if (!this.completed) {
+    const today = new Date().toLocaleDateString("en-CA");
+    const dueDateStr = this.dueDate.toLocaleDateString("en-CA");
+
+    if (dueDateStr === today) {
+      dateStr = '';
+    } else {
+      dateStr = ` ${dueDateStr}`;
+    }
   }
+
+  return `${this.id}. ${checkbox} ${this.title}${dateStr}`.trim();
 }
+
 
 module.exports = (sequelize, DataTypes) => {
   Todo.init(
