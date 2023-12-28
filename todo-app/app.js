@@ -10,11 +10,13 @@ app.get("/", function (request, response) {
 
 app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
-  // FILL IN YOUR CODE HERE
-
-  // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
-  // Then, we have to respond with all Todos, like:
-  // response.send(todos)
+  try {
+    const todos = await Todo.findAll(); // Query PostgreSQL database using Sequelize to get all Todos
+    response.send(todos); // Respond with all Todos
+  } catch (error) {
+    console.error("Error fetching todos:", error);
+    response.status(500).json({ error: "Failed to fetch todos" });
+  }
 });
 
 app.get("/todos/:id", async function (request, response) {
@@ -50,11 +52,20 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
 
 app.delete("/todos/:id", async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
-  // FILL IN YOUR CODE HERE
+  try {
+    const todo = await Todo.findByPk(request.params.id); // Find the Todo by ID
 
-  // First, we have to query our database to delete a Todo by ID.
-  // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
-  // response.send(true)
+    if (!todo) {
+      response.send(false); // If Todo not found, respond with false
+      return;
+    }
+
+    await todo.destroy(); // Delete the Todo
+    response.send(true); // Respond with true upon successful deletion
+  } catch (error) {
+    console.error("Error deleting todo:", error);
+    response.status(500).json(false); // Respond with false in case of an error
+  }
 });
 
 module.exports = app;
