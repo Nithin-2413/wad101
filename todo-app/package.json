@@ -1,0 +1,35 @@
+{
+  "devDependencies": {
+    "@babel/core": "^7.18.0",
+    "@babel/node": "^7.16.4",
+    "@babel/preset-env": "^7.18.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.5.0",
+    "express": "^4.17.1",
+    "husky": "^7.0.1",
+    "jest": "^27.4.7",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "supertest": "^6.1.6"
+  },
+  "scripts": {
+    "start": "nodemon index.js",
+    "start:prod": "node index.js",
+    "pretest": "NODE_ENV=test sequelize-cli db:drop && NODE_ENV=test sequelize-cli db:create",
+    "test": "NODE_ENV=test jest --detectOpenHandles",
+    "prepare": "cd .. && husky install todo-cli/.husky"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --write ."
+    ]
+  },
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "pg": "^8.7.1",
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0",
+    "pg-hstore": "^2.3.4"
+  }
+}
