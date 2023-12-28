@@ -1,5 +1,4 @@
 const request = require("supertest");
-
 const db = require("../models/index");
 const app = require("../app");
 
@@ -72,25 +71,22 @@ describe("Todo Application", function () {
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-    test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-  // Create a new todo to delete
-  const newTodo = await agent.post("/todos").send({
-    title: "Delete me",
-    dueDate: new Date().toISOString(),
-    completed: false,
-  });
-  const parsedTodo = JSON.parse(newTodo.text);
-  const todoIDToDelete = parsedTodo.id;
+    // Create a new todo to delete
+    const newTodo = await agent.post("/todos").send({
+      title: "Delete me",
+      dueDate: new Date().toISOString(),
+      completed: false,
+    });
+    const parsedTodo = JSON.parse(newTodo.text);
+    const todoIDToDelete = parsedTodo.id;
 
-  // Attempt to delete the created todo
-  const deleteResponse = await agent.delete(`/todos/${todoIDToDelete}`).send();
+    // Attempt to delete the created todo
+    const deleteResponse = await agent.delete(`/todos/${todoIDToDelete}`).send();
 
-  // Check if deletion was successful
-  expect(deleteResponse.statusCode).toBe(200);
-  expect(deleteResponse.header["content-type"]).toBe("application/json; charset=utf-8");
-  const parsedDeleteResponse = JSON.parse(deleteResponse.text);
-  expect(parsedDeleteResponse).toBe(true);
-});
-
+    // Check if deletion was successful
+    expect(deleteResponse.statusCode).toBe(200);
+    expect(deleteResponse.header["content-type"]).toBe("application/json; charset=utf-8");
+    const parsedDeleteResponse = JSON.parse(deleteResponse.text);
+    expect(parsedDeleteResponse).toBe(true);
   });
 });
